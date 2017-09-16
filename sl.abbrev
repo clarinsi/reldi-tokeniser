@@ -11,7 +11,7 @@ akad\.	N
 al\.	N
 ambas\.	N
 ang\.	N
-angl\.	B
+angl\.	N
 apr\.	N
 asist\.	N
 avg\.	N
@@ -78,6 +78,7 @@ mt\.	N
 naroč\.	N
 nn\.	N
 nav\.	N
+nem\.	N
 nov\.	N
 npr\.	N
 oec\.	N
@@ -124,3 +125,4 @@ zv\.	N
 čit\.	B
 čl\.	N
 št\.	N
+štud\.	N
