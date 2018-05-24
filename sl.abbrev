@@ -2,10 +2,13 @@
 #S = always ends sentence
 #N = never ends sentence
 #B = sometimes ends sentence
+[a-zšđčćž]\.(?!\.)	N
+[mdclxvi]+\.	N
+al\'\b	N
 d\.o\.o\.?	B
 d\.d\.?	B
-[a-zšđčćž]\.(?!\.)	N
-al\'\b	N
+abs\.	N
+absol\.	N
 aka\.	N
 akad\.	N
 al\.	N
@@ -18,8 +21,10 @@ avg\.	N
 bacc\.	B	
 bl\.	N
 cca\.	N
+cit\.	N
 co\.	B
 dec\.	N
+deb\.	N
 dig\.	N
 dipl\.	N
 dir\.	N
@@ -27,7 +32,9 @@ doc\.	N
 dod\.	N
 d\.o\.o\.	B
 dr\.	N
+društv?\.	N
 ek\.	B
+ekpr\.	B
 emer\.	B
 eng\.	B
 evr\.	N
@@ -38,6 +45,7 @@ fot\.	N
 fr\.	N
 gdč\.	N
 geo\.	N
+geogr?\.	N
 gosp\.	N
 grš\.	B
 hrv\.	B
@@ -50,6 +58,8 @@ ipd\.	S
 itd\.	S
 itn\.	S
 iur\.	N
+izm\.	N
+izr\.	N
 jan\.	N
 jr\.	B
 jul\.	N
@@ -66,9 +76,11 @@ lj\.	B
 ltd\.	B
 mag\.	N
 mar\.	N
+max\.	N
 mdr\.	N
 mil\.	N
 min\.	B
+mio\.	B
 mlrd\.	B
 mn\.	B
 mons\.	N
@@ -81,6 +93,7 @@ nav\.	N
 nem\.	N
 nov\.	N
 npr\.	N
+odd\.	N
 oec\.	N
 okt\.	N
 okr\.	N
@@ -88,18 +101,28 @@ op\.	N
 opr\.	N
 org\.	N
 orig\.	N
+os\.	N
 oz\.	N
 pl\.	N
+popr\.	N
+pov\.	N
+povpr?\.	N
+povz\.	N
 pr\.	N
+predšol\.	N
+prosv\.	N
 prim\.	N
 prof\.	N
 rač\.	N
+razd\.	B
 reg\.	N
+rel\.	N
 roj\.	N
 roč\.	N
 sci\.	N
 sep\.	N
 sept\.	N
+sl\.	N
 slo\.	N
 slov\.	N
 smuč\.	N
@@ -108,7 +131,9 @@ sod\.	N
 sovraž\.	N
 spec\.	N
 sr\.	N
+sred\.	N
 st\.	N
+stand\.	N
 str\.	N
 sv\.	N
 t\.j\.	N
@@ -118,11 +143,15 @@ tel\.	N
 temp\.	N
 tj\.	N
 tzv\.	N
+ur\.	N
 voj\.	N
-www\.	N
+vs\.	N
 zač\.	B
+zn\.	N
+znanstv?\.	N
 zv\.	N
 čit\.	B
 čl\.	N
 št\.	N
+štev\.	N
 štud\.	N
