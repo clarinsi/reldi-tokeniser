@@ -3,6 +3,7 @@
 import re
 import codecs
 import sys
+import random
 
 from signal import signal, SIGPIPE, SIG_DFL
 signal(SIGPIPE,SIG_DFL) 
@@ -183,4 +184,5 @@ if __name__=='__main__':
   par_id=0
   for line in sys.stdin:
     par_id+=1
+    sys.stdout.write('# newpar id = NEWPAR_UUID_{:08X}\n'.format(random.getrandbits(32)))
     sys.stdout.write(represent_tomaz(process[mode](tokenizer,line.decode('utf8'),lang),par_id).encode('utf8'))
