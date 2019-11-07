@@ -155,17 +155,32 @@ def sentence_split(tokens,lang):
 
 process={'standard':lambda x,y,z:sentence_split(tokenize(x,y),z),'nonstandard':lambda x,y,z:sentence_split_nonstd(tokenize(x,y),z)}
 
+def to_text(sent):
+  text=''
+  for idx,(token,start,end) in enumerate(sent):
+    if idx>0:
+      text+=' '*(start-1-sent[idx-1][2])
+    text+=token
+  return text+'\n'
+
 def represent_tomaz(input,par_id):
   output=''
   token_id=0
   sent_id=0
+  if args.conllu:
+    output+='# newpar id = ' + str(par_id)+'\n'
   for sent in input:
     sent_id+=1
     token_id=0
+    if args.conllu:
+      output+='# text = '+to_text(sent)
     for token,start,end in sent:
       if not token[0].isspace():
         token_id+=1
-        output+=str(par_id)+'.'+str(sent_id)+'.'+str(token_id)+'.'+str(start+1)+'-'+str(end)+'\t'+token+'\n'
+        if args.conllu:
+          output+=str(token_id)+'\t'+token+'\t_'*8+'\n'
+        else:
+          output+=str(par_id)+'.'+str(sent_id)+'.'+str(token_id)+'.'+str(start+1)+'-'+str(end)+'\t'+token+'\n'
     output+='\n'
   return output
 
@@ -173,6 +188,7 @@ if __name__=='__main__':
   import argparse
   parser=argparse.ArgumentParser(description='Tokeniser for (non-)standard Slovene, Croatian and Serbian')
   parser.add_argument('lang',help='language of the text',choices=['sl','hr','sr'])
+  parser.add_argument('-c','--conllu',help='generates CONLLU output',action='store_true')
   parser.add_argument('-n','--nonstandard',help='invokes the non-standard mode',action='store_true')
   args=parser.parse_args()
   lang=args.lang
