@@ -173,6 +173,7 @@ def represent_tomaz(input,par_id):
     sent_id+=1
     token_id=0
     if args.conllu:
+      output+='# sent_id = '+str(par_id)+'.'+str(sent_id)+'\n'
       output+='# text = '+to_text(sent)
     for token,start,end in sent:
       if not token[0].isspace():
