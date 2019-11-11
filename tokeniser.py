@@ -200,4 +200,8 @@ if __name__=='__main__':
   par_id=0
   for line in sys.stdin:
     par_id+=1
+    if line.startswith('# newdoc id = '):
+      par_id=0
+      sys.stdout.write(line)
+      continue
     sys.stdout.write(represent_tomaz(process[mode](tokenizer,line.decode('utf8'),lang),par_id).encode('utf8'))
