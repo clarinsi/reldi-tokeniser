@@ -5,7 +5,7 @@ A tokeniser developed inside the [ReLDI project](https://reldi.spur.uzh.ch). Sup
 ## Usage
 
 ```
-$ echo 'kaj sad s tim.daj se nasmij ^_^. | ./tokeniser.py hr -n
+$ echo 'kaj sad s tim.daj se nasmij ^_^.' | ./tokeniser.py hr -n
 1.1.1.1-3	kaj
 1.1.2.5-7	sad
 1.1.3.9-9	s
@@ -22,3 +22,45 @@ $ echo 'kaj sad s tim.daj se nasmij ^_^. | ./tokeniser.py hr -n
 ```
 
 Language is a positional argument while tokenisation of non-standard text is an optional one.
+
+## CoNLL-U output
+
+This tokeniser is also an input point to the new neural pipeline for processing South Slavic languages (classla-stanfordnlp)[https://github.com/clarinsi/classla-stanfordnlp], requiring a CoNLL-U format. The tokeniser passes through lines starting with ```# newdoc id =``` to preserve document structure.
+
+```
+
+$ echo '# newdoc id = prvi
+kaj sad s tim.daj se nasmij ^_^.
+haha
+# newdoc id = gidru
+štaš' | ./tokeniser.py hr -n -c
+# newdoc id = prvi
+# newpar id = 1
+# sent_id = 1.1
+# text = kaj sad s tim.
+1	kaj	_	_	_	_	_	_	_	_
+2	sad	_	_	_	_	_	_	_	_
+3	s	_	_	_	_	_	_	_	_
+4	tim	_	_	_	_	_	_	_	_
+5	.	_	_	_	_	_	_	_	_
+
+# sent_id = 1.2
+# text = daj se nasmij ^_^.
+1	daj	_	_	_	_	_	_	_	_
+2	se	_	_	_	_	_	_	_	_
+3	nasmij	_	_	_	_	_	_	_	_
+4	^_^	_	_	_	_	_	_	_	_
+5	.	_	_	_	_	_	_	_	_
+
+# newpar id = 2
+# sent_id = 2.1
+# text = haha
+1	haha	_	_	_	_	_	_	_	_
+
+# newdoc id = gidru
+# newpar id = 1
+# sent_id = 1.1
+# text = štaš
+1	štaš	_	_	_	_	_	_	_	_
+
+```
