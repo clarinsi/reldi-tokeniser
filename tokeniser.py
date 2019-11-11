@@ -169,17 +169,25 @@ def represent_tomaz(input,par_id):
   sent_id=0
   if args.conllu:
     output+='# newpar id = ' + str(par_id)+'\n'
-  for sent in input:
+  for sent_idx,sent in enumerate(input):
     sent_id+=1
     token_id=0
     if args.conllu:
       output+='# sent_id = '+str(par_id)+'.'+str(sent_id)+'\n'
       output+='# text = '+to_text(sent)
-    for token,start,end in sent:
+    for token_idx,(token,start,end) in enumerate(sent):
       if not token[0].isspace():
         token_id+=1
         if args.conllu:
-          output+=str(token_id)+'\t'+token+'\t_'*8+'\n'
+          SpaceAfter=True
+          if len(sent)>token_idx+1:
+            SpaceAfter=sent[token_idx+1][0].isspace()
+          elif len(input)>sent_idx+1:
+            SpaceAfter=input[sent_idx+1][0][0].isspace()
+          if SpaceAfter:
+            output+=str(token_id)+'\t'+token+'\t_'*8+'\n'
+          else:
+            output+=str(token_id)+'\t'+token+'\t_'*7+'\tSpaceAfter=No\n'
         else:
           output+=str(par_id)+'.'+str(sent_id)+'.'+str(token_id)+'.'+str(start+1)+'-'+str(end)+'\t'+token+'\n'
     output+='\n'

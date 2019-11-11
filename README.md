@@ -41,15 +41,15 @@ haha
 1	kaj	_	_	_	_	_	_	_	_
 2	sad	_	_	_	_	_	_	_	_
 3	s	_	_	_	_	_	_	_	_
-4	tim	_	_	_	_	_	_	_	_
-5	.	_	_	_	_	_	_	_	_
+4	tim	_	_	_	_	_	_	_	SpaceAfter=No
+5	.	_	_	_	_	_	_	_	SpaceAfter=No
 
 # sent_id = 1.2
 # text = daj se nasmij ^_^.
 1	daj	_	_	_	_	_	_	_	_
 2	se	_	_	_	_	_	_	_	_
 3	nasmij	_	_	_	_	_	_	_	_
-4	^_^	_	_	_	_	_	_	_	_
+4	^_^	_	_	_	_	_	_	_	SpaceAfter=No
 5	.	_	_	_	_	_	_	_	_
 
 # newpar id = 2
