@@ -33,7 +33,7 @@ langs={
   'hr':{
     'abbrev':ur'|'.join(abbrevs['hr']['B']+abbrevs['hr']['N']+abbrevs['hr']['S']),
     'num':num,
-    'url':r'https?://[-\w/%]+(?:[.#?=&@;][-\w/%]+)+|\b\w+\.(?:\w+\.)?(?:[a-z]{3,4})/?\b',
+    'url':r'https?://[-\w/%]+(?:[.#?=&@;][-\w/%]+)+|\b\w+\.(?:\w+\.)?(?:si|hr|com|org|rs|ba|me|mk|bg|ru|net|de|br|uk|it|pl|jp|at|hu)/?\b',
     'htmlesc':r'&#?[a-z0-9]+;',
     'tag':r'</?[a-z][\w:]*>|<[a-z][\w:]*/?>',
     'mail':r'[\w.-]+@\w+(?:[.-]\w+)+',
@@ -200,8 +200,9 @@ if __name__=='__main__':
   par_id=0
   for line in sys.stdin:
     par_id+=1
-    if line.startswith('# newdoc id = '):
-      par_id=0
-      sys.stdout.write(line)
-      continue
+    if args.conllu:
+      if line.startswith('# newdoc id = '):
+        par_id=0
+        sys.stdout.write(line)
+        continue
     sys.stdout.write(represent_tomaz(process[mode](tokenizer,line.decode('utf8'),lang),par_id).encode('utf8'))
