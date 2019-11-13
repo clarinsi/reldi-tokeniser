@@ -198,8 +198,11 @@ if __name__=='__main__':
   parser=argparse.ArgumentParser(description='Tokeniser for (non-)standard Slovene, Croatian and Serbian')
   parser.add_argument('lang',help='language of the text',choices=['sl','hr','sr'])
   parser.add_argument('-c','--conllu',help='generates CONLLU output',action='store_true')
+  parser.add_argument('-d','--document',help='passes through ConLL-U-style document boundaries',action='store_true')
   parser.add_argument('-n','--nonstandard',help='invokes the non-standard mode',action='store_true')
   args=parser.parse_args()
+  if args.document:
+    args.conllu=True
   lang=args.lang
   mode='standard'
   if args.nonstandard:
@@ -208,7 +211,7 @@ if __name__=='__main__':
   par_id=0
   for line in sys.stdin:
     par_id+=1
-    if args.conllu:
+    if args.document:
       if line.startswith('# newdoc id = '):
         par_id=0
         sys.stdout.write(line)
