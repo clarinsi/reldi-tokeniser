@@ -158,8 +158,8 @@ process={'standard':lambda x,y,z:sentence_split(tokenize(x,y),z),'nonstandard':l
 def to_text(sent):
   text=''
   for idx,(token,start,end) in enumerate(sent):
-    if idx>0:
-      text+=' '*(start-1-sent[idx-1][2])
+    if idx==0 and token[0].isspace():
+      continue
     text+=token
   return text+'\n'
 
