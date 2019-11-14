@@ -210,6 +210,8 @@ if __name__=='__main__':
   tokenizer=generate_tokenizer(lang)
   par_id=0
   for line in sys.stdin:
+    if line.strip()=='':
+      continue
     par_id+=1
     if args.document:
       if line.startswith('# newdoc id = '):
