@@ -188,8 +188,12 @@ def represent_tomaz(input,par_id):
             output+=str(token_id)+'\t'+token+'\t_'*8+'\n'
           else:
             output+=str(token_id)+'\t'+token+'\t_'*7+'\tSpaceAfter=No\n'
+        elif args.bert:
+          output+=token+' '
         else:
           output+=str(par_id)+'.'+str(sent_id)+'.'+str(token_id)+'.'+str(start+1)+'-'+str(end)+'\t'+token+'\n'
+    if args.bert:
+      output=output.strip()
     output+='\n'
   return output
 
@@ -198,6 +202,7 @@ if __name__=='__main__':
   parser=argparse.ArgumentParser(description='Tokeniser for (non-)standard Slovene, Croatian and Serbian')
   parser.add_argument('lang',help='language of the text',choices=['sl','hr','sr'])
   parser.add_argument('-c','--conllu',help='generates CONLLU output',action='store_true')
+  parser.add_argument('-b','--bert',help='generates BERT-compatible output',action='store_true')
   parser.add_argument('-d','--document',help='passes through ConLL-U-style document boundaries',action='store_true')
   parser.add_argument('-n','--nonstandard',help='invokes the non-standard mode',action='store_true')
   args=parser.parse_args()
@@ -219,3 +224,5 @@ if __name__=='__main__':
         sys.stdout.write(line)
         continue
     sys.stdout.write(represent_tomaz(process[mode](tokenizer,line.decode('utf8'),lang),par_id).encode('utf8'))
+    if args.bert:
+      sys.stdout.write('\n')

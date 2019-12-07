@@ -27,14 +27,14 @@ doc\.	N
 dod\.	N
 dr\.	N
 ek\.	B
-emer\.	B
-eng\.	B
+emer\.	N
+eng\.	N
 farm\.	B
 feb\.	N
 fr\.	N
 god\.	B
 gosp\.	N
-hrv\.	B
+hrv\.	N
 inc\.	B
 ing\.	N
 inst\.	N
@@ -48,6 +48,7 @@ jun\.	N
 kbr\.	B
 kem\.	B
 kr\.	B
+lat\.	N
 lj\.	B
 ltd\.	B
 mag\.	N
