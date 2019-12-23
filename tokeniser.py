@@ -20,7 +20,7 @@ def read_abbrevs(file):
 
 abbrevs={
   'hr':read_abbrevs('hr.abbrev'),
-  'sr':read_abbrevs('hr.abbrev'),
+  'sr':read_abbrevs('sr.abbrev'),
   'sl':read_abbrevs('sl.abbrev')
 }
 
