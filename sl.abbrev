@@ -21,6 +21,7 @@ bl\.	N
 cca\.	N
 cit\.	N
 co\.	B
+cp\.	B
 d\.d\.?	B
 d\.o\.o\.	B
 deb\.	N
@@ -32,6 +33,9 @@ doc\.	N
 dod\.	N
 dr\.	N
 društv?\.	N
+dz\.	B
+dz\.	N
+ed\.	N
 ek\.	B
 ekpr\.	B
 emer\.	B
@@ -39,14 +43,18 @@ eng\.	B
 evr\.	N
 farm\.	B
 feb\.	N
+febr\.	N
 fiz\.	N
 fot\.	N
 fr\.	N
 gdč\.	N
 geo\.	N
 geogr?\.	N
+gh\.	N
+gl\.	N
 gosp\.	N
 grš\.	B
+gz\.	N
 hrv\.	B
 idr\.	S
 inc\.	B
@@ -60,6 +68,7 @@ iur\.	N
 izm\.	N
 izr\.	N
 jan\.	N
+jn\.	B
 jr\.	B
 jul\.	N
 jun\.	N
@@ -86,6 +95,7 @@ mons\.	N
 mr\.	N
 msgr\.	N
 mt\.	N
+najv\.	N
 naroč\.	N
 nav\.	N
 nem\.	N
@@ -93,6 +103,7 @@ nn\.	N
 nov\.	N
 npr\.	N
 odd\.	N
+odz\.	B
 oec\.	N
 okr\.	N
 okt\.	N
@@ -143,9 +154,12 @@ temp\.	N
 tj\.	N
 tzv\.	N
 ur\.	N
+uzb\.	N
 voj\.	N
 vs\.	N
 zač\.	B
+zb\.	N
+zjz\.	N
 zn\.	N
 znanstv?\.	N
 zv\.	N
