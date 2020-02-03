@@ -153,17 +153,17 @@ def sentence_split(tokens,lang):
         boundaries.append(index+1)
         continue
       if index+2<len(tokens):
-        if tokens[index+2][0][0].isupper() or tokens[index+1][0][0].isdigit():
+        if tokens[index+2][0][0].isupper() or tokens[index+2][0][0].isdigit():
           if tokens[index+1][0].isspace() or tokens[index+1][0][0] in '-»"\'':
             boundaries.append(index+1)
             continue
       if index+3<len(tokens):
-        if tokens[index+3][0][0].isupper() or tokens[index+1][0][0].isdigit():
+        if tokens[index+3][0][0].isupper() or tokens[index+3][0][0].isdigit():
           if tokens[index+1][0].isspace() and tokens[index+2][0][0] in '-»"\'':
             boundaries.append(index+1)
             continue
       if index+4<len(tokens):
-        if tokens[index+4][0][0].isupper() or tokens[index+1][0][0].isdigit():
+        if tokens[index+4][0][0].isupper() or tokens[index+4][0][0].isdigit():
           if tokens[index+1][0].isspace() and tokens[index+2][0][0] in '-»"\'' and tokens[index+3][0][0] in '-»"\'':
             boundaries.append(index+1)
             continue
