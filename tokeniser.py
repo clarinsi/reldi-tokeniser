@@ -149,24 +149,29 @@ def sentence_split(tokens,lang):
   for index in range(len(tokens)-1):
     token=tokens[index][0]
     if token[0] in '.!?…' or (token.endswith('.') and token.lower() not in abbrevs[lang]['N'] and len(token)>2 and tokens[index+1][0][0] not in '.!?…'):
-      if tokens[index+1][0][0].isupper() or tokens[index+1][0][0].isdigit():
+      if tokens[index+1][0][0].isupper():
         boundaries.append(index+1)
         continue
       if index+2<len(tokens):
-        if tokens[index+2][0][0].isupper() or tokens[index+2][0][0].isdigit():
+        if tokens[index+2][0][0].isupper():
           if tokens[index+1][0].isspace() or tokens[index+1][0][0] in '-»"\'':
             boundaries.append(index+1)
             continue
       if index+3<len(tokens):
-        if tokens[index+3][0][0].isupper() or tokens[index+3][0][0].isdigit():
+        if tokens[index+3][0][0].isupper():
           if tokens[index+1][0].isspace() and tokens[index+2][0][0] in '-»"\'':
             boundaries.append(index+1)
             continue
       if index+4<len(tokens):
-        if tokens[index+4][0][0].isupper() or tokens[index+4][0][0].isdigit():
+        if tokens[index+4][0][0].isupper():
           if tokens[index+1][0].isspace() and tokens[index+2][0][0] in '-»"\'' and tokens[index+3][0][0] in '-»"\'':
             boundaries.append(index+1)
             continue
+    if token[0] in '.!?…':
+      if index+2<len(tokens):
+        if tokens[index+2][0][0].isdigit():
+          boundaries.append(index+1)
+          continue
   boundaries.append(len(tokens))
   sents=[]
   for index in range(len(boundaries)-1):
