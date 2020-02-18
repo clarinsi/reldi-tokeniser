@@ -52,7 +52,7 @@ langs={
   'sr':{
     'abbrev':r'|'.join(abbrevs['sr']['B']+abbrevs['sr']['N']+abbrevs['sr']['S']),
     'num':num,
-    'url':r'https?://[-\w/%]+(?:[.#?=&@;][-\w/%]+)+|\b\w+\.(?:\w+\.)?(?:[a-z]{3,4})/?\b',
+    'url':r'https?://[-\w/%]+(?:[.#?=&@;][-\w/%]+)+|\b\w+\.(?:\w+\.)?(?:com|org|net|gov|edu|int|io|eu|si|hr|rs|ba|me|mk|it|at|hu|bg|ro|al|de|ch|be|dk|se|no|es|pt|ie|fr|fi|cl|co|bo|br|gr|ru|uk|us|by|cz|sk|pl|lt|lv|lu|ca|in|tr|il|iq|ir|hk|cn|jp|au|nz)/?\b',
     'htmlesc':r'&#?[a-z0-9]+;',
     'tag':r'</?[a-z][\w:]*>|<[a-z][\w:]*/?>',
     'mail':r'[\w.-]+@\w+(?:[.-]\w+)+',
@@ -70,7 +70,7 @@ langs={
   'sl':{
     'abbrev':r'|'.join(abbrevs['sl']['B']+abbrevs['sl']['N']+abbrevs['sl']['S']),
     'num':num,
-    'url':r'https?://[-\w/%]+(?:[.#?=&@;][-\w/%]+)+|\b\w+\.(?:\w+\.)?(?:[a-z]{3,4})/?\b',
+    'url':r'https?://[-\w/%]+(?:[.#?=&@;][-\w/%]+)+|\b\w+\.(?:\w+\.)?(?:com|org|net|gov|edu|int|io|eu|si|hr|rs|ba|me|mk|it|at|hu|bg|ro|al|de|ch|be|dk|se|no|es|pt|ie|fr|fi|cl|co|bo|br|gr|ru|uk|us|by|cz|sk|pl|lt|lv|lu|ca|in|tr|il|iq|ir|hk|cn|jp|au|nz)/?\b',
     'htmlesc':r'&#?[a-z0-9]+;',
     'tag':r'</?[a-z][\w:]*>|<[a-z][\w:]*/?>',
     'mail':r'[\w.-]+@\w+(?:[.-]\w+)+',
@@ -88,7 +88,7 @@ langs={
   'mk':{
     'abbrev':r'|'.join(abbrevs['mk']['B']+abbrevs['mk']['N']+abbrevs['mk']['S']),
     'num':num,
-    'url':r'https?://[-\w/%]+(?:[.#?=&@;][-\w/%]+)+|\b\w+\.(?:\w+\.)?(?:[a-z]{3,4})/?\b',
+    'url':r'https?://[-\w/%]+(?:[.#?=&@;][-\w/%]+)+|\b\w+\.(?:\w+\.)?(?:com|org|net|gov|edu|int|io|eu|si|hr|rs|ba|me|mk|it|at|hu|bg|ro|al|de|ch|be|dk|se|no|es|pt|ie|fr|fi|cl|co|bo|br|gr|ru|uk|us|by|cz|sk|pl|lt|lv|lu|ca|in|tr|il|iq|ir|hk|cn|jp|au|nz)/?\b',
     'htmlesc':r'&#?[a-z0-9]+;',
     'tag':r'</?[a-z][\w:]*>|<[a-z][\w:]*/?>',
     'mail':r'[\w.-]+@\w+(?:[.-]\w+)+',
