@@ -22,7 +22,8 @@ abbrevs={
   'hr':read_abbrevs('hr.abbrev'),
   'sr':read_abbrevs('sr.abbrev'),
   'sl':read_abbrevs('sl.abbrev'),
-  'mk':read_abbrevs('mk.abbrev')
+  'mk':read_abbrevs('mk.abbrev'),
+  'bg':read_abbrevs('bg.abbrev')
 }
 
 num=r'(?:(?<!\d)[+-])?\d+(?:[.,:/]\d+)*(?:[.](?!\.)|-[^\W\d_]+)?'
@@ -101,8 +102,26 @@ langs={
     'space':r'\s+',
     'other':r'(.)\1*',
     'order':('abbrev','num','url','htmlesc','tag','mail','mention','hashtag','emoticon','word','arrow','dot','space','other')
-  }
+  },
 
+
+  'bg':{
+    'abbrev':r'|'.join(abbrevs['bg']['B']+abbrevs['bg']['N']+abbrevs['bg']['S']),
+    'num':num,
+    'url':r'https?://[-\w/%]+(?:[.#?=&@;][-\w/%]+)+|\b\w+\.(?:\w+\.)?(?:com|org|net|gov|edu|int|io|eu|si|hr|rs|ba|me|mk|it|at|hu|bg|ro|al|de|ch|be|dk|se|no|es|pt|ie|fr|fi|cl|co|bo|br|gr|ru|uk|us|by|cz|sk|pl|lt|lv|lu|ca|in|tr|il|iq|ir|hk|cn|jp|au|nz)/?\b',
+    'htmlesc':r'&#?[a-z0-9]+;',
+    'tag':r'</?[a-z][\w:]*>|<[a-z][\w:]*/?>',
+    'mail':r'[\w.-]+@\w+(?:[.-]\w+)+',
+    'mention':r'@[a-z0-9_]+',
+    'hashtag':r'#\w+(?:[.-]\w+)*',
+    'emoticon':emoticon,
+    'word':word,
+    'arrow':r'<[-]+|[-]+>',
+    'dot':r'[.!?/]{2,}',
+    'space':r'\s+',
+    'other':r'(.)\1*',
+    'order':('abbrev','num','url','htmlesc','tag','mail','mention','hashtag','emoticon','word','arrow','dot','space','other')
+  }
 }
 
 #transform abbreviation lists to sets for lookup during sentence splitting
@@ -154,17 +173,17 @@ def sentence_split(tokens,lang):
         continue
       if index+2<len(tokens):
         if tokens[index+2][0][0].isupper():
-          if tokens[index+1][0].isspace() or tokens[index+1][0][0] in '-»"\'':
+          if tokens[index+1][0].isspace() or tokens[index+1][0][0] in '-»"\'„':
             boundaries.append(index+1)
             continue
       if index+3<len(tokens):
         if tokens[index+3][0][0].isupper():
-          if tokens[index+1][0].isspace() and tokens[index+2][0][0] in '-»"\'':
+          if tokens[index+1][0].isspace() and tokens[index+2][0][0] in '-»"\'„':
             boundaries.append(index+1)
             continue
       if index+4<len(tokens):
         if tokens[index+4][0][0].isupper():
-          if tokens[index+1][0].isspace() and tokens[index+2][0][0] in '-»"\'' and tokens[index+3][0][0] in '-»"\'':
+          if tokens[index+1][0].isspace() and tokens[index+2][0][0] in '-»"\'„' and tokens[index+3][0][0] in '-»"\'„':
             boundaries.append(index+1)
             continue
     if token[0] in '.!?…':
@@ -224,8 +243,8 @@ def represent_tomaz(input,par_id):
 
 if __name__=='__main__':
   import argparse
-  parser=argparse.ArgumentParser(description='Tokeniser for (non-)standard Slovene, Croatian, Serbian and Macedonian')
-  parser.add_argument('lang',help='language of the text',choices=['sl','hr','sr','mk'])
+  parser=argparse.ArgumentParser(description='Tokeniser for (non-)standard Slovene, Croatian, Serbian, Macedonian and Bulgarian')
+  parser.add_argument('lang',help='language of the text',choices=['sl','hr','sr','mk','bg'])
   parser.add_argument('-c','--conllu',help='generates CONLLU output',action='store_true')
   parser.add_argument('-b','--bert',help='generates BERT-compatible output',action='store_true')
   parser.add_argument('-d','--document',help='passes through ConLL-U-style document boundaries',action='store_true')

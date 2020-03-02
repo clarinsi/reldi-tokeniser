@@ -1,6 +1,6 @@
 # reldi-tokeniser
 
-A tokeniser developed inside the [ReLDI project](https://reldi.spur.uzh.ch). Supports three languages -- Croatian, Serbian and Slovene, and two modes -- for standard and non-standard text.
+A tokeniser developed inside the [ReLDI project](https://reldi.spur.uzh.ch). Supports currently five languages -- Slovene, Croatian, Serbian, Macedonian and Bulgarian, and two modes -- standard and non-standard text.
 
 ## Usage
 
