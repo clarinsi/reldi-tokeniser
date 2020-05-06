@@ -4,8 +4,13 @@ import re
 import codecs
 import sys
 
-from signal import signal, SIGPIPE, SIG_DFL
-signal(SIGPIPE,SIG_DFL) 
+if sys.platform == 'win32':
+  from signal import signal, SIG_DFL
+else:
+  from signal import signal, SIGPIPE, SIG_DFL
+
+if sys.platform != 'win32':
+  signal(SIGPIPE, SIG_DFL)
 
 import os
 reldir=os.path.dirname(os.path.abspath(__file__))
