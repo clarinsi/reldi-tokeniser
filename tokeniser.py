@@ -4,6 +4,7 @@ import re
 import codecs
 import sys
 import threading
+import unicodedata
 
 if sys.platform == 'win32':
   from signal import signal, SIG_DFL
@@ -35,14 +36,17 @@ abbrevs={
 
 num=r'(?:(?<!\d)[+-])?\d+(?:[.,:/]\d+)*(?:[.](?!\.)|-[^\W\d_]+)?'
 # emoswithspaces emoticon=r'[=:;8][\'-]*(?:\s?\)+|\s?\(+|\s?\]+|\s?\[+|\sd\b|\sp\b|d+\b|p+\b|s+\b|o+\b|/|\\|\$|\*+)|-\.-|\^_\^|\([\W]+\)|<3|</3|<\\3|\\o/'
-emoticon=r'[=:;8][\'-]*(?:\)+|\(+|\]+|\[+|d\b|p\b|d+\b|p+\b|s+\b|o+\b|/|\\|\$|\*+)|-\.-|\^_\^|\([^\w\s]+\)|<3|</3|<\\3|\\o/'
+emoticon=r'[=:;8][\'-]*(?:\)+|\(+|\]+|\[+|D+\b|P+\b|S+\b|O+\b|d+\b|p+\b|s+\b|o+\b|/|\\|\$|\*+)|-\.-|\^_\^|\([^\w\s]+\)|<3|</3|<\\3|\\o/'
+url=r'https?://[-\w/%]+(?:[.#?=&@;][-\w/%]+)+|\b[\w-]+\.(?:[\w-]+\.)?(?:com|org|net|gov|edu|int|io|eu|si|hr|rs|ba|me|mk|it|at|hu|bg|ro|al|de|ch|be|dk|se|no|es|pt|ie|fr|fi|cl|co|bo|br|gr|ru|uk|us|by|cz|sk|pl|lt|lv|lu|ca|in|tr|il|iq|ir|hk|cn|jp|au|nz)/?\b'
 word=r'(?:[*]{2,})?\w+(?:[@­\'-]\w+|[*]+\w+)*(?:[*]{2,})?'
+#open('punct','w').write(''.join([chr(i) for i in range(sys.maxunicode) if unicodedata.category(chr(i)).startswith('P')]))
+punct=open('punct').read()
 
 langs={
   'hr':{
     'abbrev':r'|'.join(abbrevs['hr']['B']+abbrevs['hr']['N']+abbrevs['hr']['S']),
     'num':num,
-    'url':r'https?://[-\w/%]+(?:[.#?=&@;][-\w/%]+)+|\b\w+\.(?:\w+\.)?(?:com|org|net|gov|edu|int|io|eu|si|hr|rs|ba|me|mk|it|at|hu|bg|ro|al|de|ch|be|dk|se|no|es|pt|ie|fr|fi|cl|co|bo|br|gr|ru|uk|us|by|cz|sk|pl|lt|lv|lu|ca|in|tr|il|iq|ir|hk|cn|jp|au|nz)/?\b',
+    'url':url,
     'htmlesc':r'&#?[a-z0-9]+;',
     'tag':r'</?[a-z][\w:]*>|<[a-z][\w:]*/?>',
     'mail':r'[\w.-]+@\w+(?:[.-]\w+)+',
@@ -60,7 +64,7 @@ langs={
   'sr':{
     'abbrev':r'|'.join(abbrevs['sr']['B']+abbrevs['sr']['N']+abbrevs['sr']['S']),
     'num':num,
-    'url':r'https?://[-\w/%]+(?:[.#?=&@;][-\w/%]+)+|\b\w+\.(?:\w+\.)?(?:com|org|net|gov|edu|int|io|eu|si|hr|rs|ba|me|mk|it|at|hu|bg|ro|al|de|ch|be|dk|se|no|es|pt|ie|fr|fi|cl|co|bo|br|gr|ru|uk|us|by|cz|sk|pl|lt|lv|lu|ca|in|tr|il|iq|ir|hk|cn|jp|au|nz)/?\b',
+    'url':url,
     'htmlesc':r'&#?[a-z0-9]+;',
     'tag':r'</?[a-z][\w:]*>|<[a-z][\w:]*/?>',
     'mail':r'[\w.-]+@\w+(?:[.-]\w+)+',
@@ -78,7 +82,7 @@ langs={
   'sl':{
     'abbrev':r'|'.join(abbrevs['sl']['B']+abbrevs['sl']['N']+abbrevs['sl']['S']),
     'num':num,
-    'url':r'https?://[-\w/%]+(?:[.#?=&@;][-\w/%]+)+|\b\w+\.(?:\w+\.)?(?:com|org|net|gov|edu|int|io|eu|si|hr|rs|ba|me|mk|it|at|hu|bg|ro|al|de|ch|be|dk|se|no|es|pt|ie|fr|fi|cl|co|bo|br|gr|ru|uk|us|by|cz|sk|pl|lt|lv|lu|ca|in|tr|il|iq|ir|hk|cn|jp|au|nz)/?\b',
+    'url':url,
     'htmlesc':r'&#?[a-z0-9]+;',
     'tag':r'</?[a-z][\w:]*>|<[a-z][\w:]*/?>',
     'mail':r'[\w.-]+@\w+(?:[.-]\w+)+',
@@ -96,7 +100,7 @@ langs={
   'mk':{
     'abbrev':r'|'.join(abbrevs['mk']['B']+abbrevs['mk']['N']+abbrevs['mk']['S']),
     'num':num,
-    'url':r'https?://[-\w/%]+(?:[.#?=&@;][-\w/%]+)+|\b\w+\.(?:\w+\.)?(?:com|org|net|gov|edu|int|io|eu|si|hr|rs|ba|me|mk|it|at|hu|bg|ro|al|de|ch|be|dk|se|no|es|pt|ie|fr|fi|cl|co|bo|br|gr|ru|uk|us|by|cz|sk|pl|lt|lv|lu|ca|in|tr|il|iq|ir|hk|cn|jp|au|nz)/?\b',
+    'url':url,
     'htmlesc':r'&#?[a-z0-9]+;',
     'tag':r'</?[a-z][\w:]*>|<[a-z][\w:]*/?>',
     'mail':r'[\w.-]+@\w+(?:[.-]\w+)+',
@@ -115,7 +119,7 @@ langs={
   'bg':{
     'abbrev':r'|'.join(abbrevs['bg']['B']+abbrevs['bg']['N']+abbrevs['bg']['S']),
     'num':num,
-    'url':r'https?://[-\w/%]+(?:[.#?=&@;][-\w/%]+)+|\b\w+\.(?:\w+\.)?(?:com|org|net|gov|edu|int|io|eu|si|hr|rs|ba|me|mk|it|at|hu|bg|ro|al|de|ch|be|dk|se|no|es|pt|ie|fr|fi|cl|co|bo|br|gr|ru|uk|us|by|cz|sk|pl|lt|lv|lu|ca|in|tr|il|iq|ir|hk|cn|jp|au|nz)/?\b',
+    'url':url,
     'htmlesc':r'&#?[a-z0-9]+;',
     'tag':r'</?[a-z][\w:]*>|<[a-z][\w:]*/?>',
     'mail':r'[\w.-]+@\w+(?:[.-]\w+)+',
@@ -229,6 +233,42 @@ def represent_tomaz(input,par_id):
     for token_idx,(token,start,end) in enumerate(sent):
       if not token[0].isspace():
         token_id+=1
+        lemma='_'
+        xpos='_'
+        upos='_'
+        if args.tag:
+          #'order':('abbrev','num','url','htmlesc','tag','mail','mention','hashtag','emoticon','word','arrow','dot','space','other')
+          if url_re.match(token):
+            xpos='Xw'
+            upos='SYM'
+            lemma=token
+          elif mail_re.match(token):
+            xpos='Xw'
+            upos='SYM'
+            lemma=token
+          elif mention_re.match(token):
+            xpos='Xa'
+            upos='SYM'
+            lemma=token
+          elif hashtag_re.match(token):
+            xpos='Xh'
+            upos='SYM'
+            lemma=token
+          elif emoticon_re.match(token):
+            xpos='Xe'
+            upos='SYM'
+            lemma=token
+          elif emoji_re.match(token):
+            xpos='Xe'
+            upos='SYM'
+            lemma=token
+          elif punct_re.match(token):
+            xpos='Z'
+            lemma=token
+            if symb_re.match(token):
+              upos='SYM'
+            else:
+              upos='PUNCT'
         if args.conllu:
           SpaceAfter=True
           if len(sent)>token_idx+1:
@@ -236,9 +276,9 @@ def represent_tomaz(input,par_id):
           elif len(input)>sent_idx+1:
             SpaceAfter=input[sent_idx+1][0][0].isspace()
           if SpaceAfter:
-            output+=str(token_id)+'\t'+token+'\t_'*8+'\n'
+            output+=str(token_id)+'\t'+token+'\t'+lemma+'\t'+upos+'\t'+xpos+'\t_'*5+'\n'
           else:
-            output+=str(token_id)+'\t'+token+'\t_'*7+'\tSpaceAfter=No\n'
+            output+=str(token_id)+'\t'+token+'\t'+lemma+'\t'+upos+'\t'+xpos+'\t_'*4+'\tSpaceAfter=No\n'
         elif args.bert:
           output+=token+' '
         else:
@@ -256,14 +296,26 @@ if __name__=='__main__':
   parser.add_argument('-b','--bert',help='generates BERT-compatible output',action='store_true')
   parser.add_argument('-d','--document',help='passes through ConLL-U-style document boundaries',action='store_true')
   parser.add_argument('-n','--nonstandard',help='invokes the non-standard mode',action='store_true')
+  parser.add_argument('-t','--tag',help='adds tags and lemmas to punctuations and symbols',action='store_true')
   args=parser.parse_args()
   if args.document:
+    args.conllu=True
+  if args.tag:
     args.conllu=True
   lang=args.lang
   mode='standard'
   if args.nonstandard:
     mode='nonstandard'
   tokenizer=generate_tokenizer(lang)
+  if args.tag:
+    punct_re=re.compile(r'^['+re.escape(punct)+']+$',re.UNICODE)
+    symb_re=re.compile(r'^['+re.escape('#%&<>+=°x÷$@µ©™®§')+']+$')
+    hashtag_re=re.compile(r'^'+langs[lang]['hashtag']+'$')
+    mention_re=re.compile(r'^'+langs[lang]['mention']+'$')
+    mail_re=re.compile(r'^'+langs[lang]['mail']+'$')
+    url_re=re.compile(r'^'+langs[lang]['url']+'$')
+    emoticon_re=re.compile(r'^'+langs[lang]['emoticon']+'$')
+    emoji_re=re.compile('^[\U00010000-\U0010ffff]+$',flags=re.UNICODE)
   par_id=0
   for line in sys.stdin:
     if line.strip()=='':
