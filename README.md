@@ -25,7 +25,7 @@ Language is a positional argument while tokenisation of non-standard text is an 
 
 ## CoNLL-U output
 
-This tokeniser is also an input point to the new neural pipeline for processing South Slavic languages (classla-stanfordnlp)[https://github.com/clarinsi/classla-stanfordnlp], requiring a CoNLL-U format. If the additional ```-d```/```--document``` flag is given, the tokeniser passes through lines starting with ```# newdoc id =``` to preserve document structure.
+This tokeniser is also an input point to the new neural pipeline for processing South Slavic languages [classla](https://github.com/clarinsi/classla), requiring a CoNLL-U format. If the additional ```-d```/```--document``` flag is given, the tokeniser passes through lines starting with ```# newdoc id =``` to preserve document structure.
 
 ```
 
