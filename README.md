@@ -66,7 +66,7 @@ haha
 ```
 ## Pre-tagging
 
-The tokeniser can now also pre-annotate text on the part-of-speech and lemma level, if the tokenisation logic has sufficient evidence for that (punctuations, mentions, hashtags, URL-s, emoticons, emojis).
+The tokeniser can now also pre-annotate text on the part-of-speech and lemma level (flag `-t` or `--tag`), if the tokenisation logic has sufficient evidence for that (punctuations, mentions, hashtags, URL-s, emoticons, emojis).
 
 ```
 $ echo -e "kaj sad s tim.daj se nasmij ^_^. haha" | python tokeniser.py hr -n -t
@@ -93,4 +93,4 @@ $ echo -e "kaj sad s tim.daj se nasmij ^_^. haha" | python tokeniser.py hr -n -t
 
 ```
 
-The output above pre-annotates punctuation and one emoticon already on the XPOS, UPOS and lemma level.
+The output above pre-annotates punctuation and one emoticon already on the XPOS, UPOS and lemma level. CoNLL-u output is the default one if pre-tagging is performed.
