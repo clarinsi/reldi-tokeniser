@@ -64,3 +64,33 @@ haha
 1	štaš	_	_	_	_	_	_	_	_
 
 ```
+## Pre-tagging
+
+The tokeniser can now also pre-annotate text on the part-of-speech and lemma level, if the tokenisation logic has sufficient evidence for that (punctuations, mentions, hashtags, URL-s, emoticons, emojis).
+
+```
+$ echo -e "kaj sad s tim.daj se nasmij ^_^. haha" | python tokeniser.py hr -n -t
+# newpar id = 1
+# sent_id = 1.1
+# text = kaj sad s tim.
+1	kaj	_	_	_	_	_	_	_	_
+2	sad	_	_	_	_	_	_	_	_
+3	s	_	_	_	_	_	_	_	_
+4	tim	_	_	_	_	_	_	_	SpaceAfter=No
+5	.	.	PUNCT	Z	_	_	_	_	SpaceAfter=No
+
+# sent_id = 1.2
+# text = daj se nasmij ^_^.
+1	daj	_	_	_	_	_	_	_	_
+2	se	_	_	_	_	_	_	_	_
+3	nasmij	_	_	_	_	_	_	_	_
+4	^_^	^_^	SYM	Xe	_	_	_	_	SpaceAfter=No
+5	.	.	PUNCT	Z	_	_	_	_	_
+
+# sent_id = 1.3
+# text = haha
+1	haha	_	_	_	_	_	_	_	_
+
+```
+
+The output above pre-annotates punctuation and one emoticon already on the XPOS, UPOS and lemma level.
