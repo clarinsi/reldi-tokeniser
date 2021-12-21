@@ -40,7 +40,7 @@ emoticon=r'[=:;8][\'-]*(?:\)+|\(+|\]+|\[+|D+\b|P+\b|S+\b|O+\b|d+\b|p+\b|s+\b|o+\
 url=r'https?://[-\w/%]+(?:[.#?=&@;][-\w/%]+)+|\b[\w-]+\.(?:[\w-]+\.)?(?:com|org|net|gov|edu|int|io|eu|si|hr|rs|ba|me|mk|it|at|hu|bg|ro|al|de|ch|be|dk|se|no|es|pt|ie|fr|fi|cl|co|bo|br|gr|ru|uk|us|by|cz|sk|pl|lt|lv|lu|ca|in|tr|il|iq|ir|hk|cn|jp|au|nz)/?\b'
 word=r'(?:[*]{2,})?\w+(?:[@­\'-]\w+|[*]+\w+)*(?:[*]{2,})?'
 #open('punct','w').write(''.join([chr(i) for i in range(sys.maxunicode) if unicodedata.category(chr(i)).startswith('P')]))
-punct=open('punct').read()
+punct = open(os.path.join(reldir,'punct')).read()
 
 langs={
   'hr':{
@@ -238,37 +238,68 @@ def represent_tomaz(input,par_id):
         upos='_'
         if args.tag:
           #'order':('abbrev','num','url','htmlesc','tag','mail','mention','hashtag','emoticon','word','arrow','dot','space','other')
-          if url_re.match(token):
-            xpos='Xw'
-            upos='SYM'
-            lemma=token
-          elif mail_re.match(token):
-            xpos='Xw'
-            upos='SYM'
-            lemma=token
-          elif mention_re.match(token):
-            xpos='Xa'
-            upos='SYM'
-            lemma=token
-          elif hashtag_re.match(token):
-            xpos='Xh'
-            upos='SYM'
-            lemma=token
-          elif emoticon_re.match(token):
-            xpos='Xe'
-            upos='SYM'
-            lemma=token
-          elif emoji_re.match(token):
-            xpos='Xe'
-            upos='SYM'
-            lemma=token
-          elif punct_re.match(token):
-            xpos='Z'
-            lemma=token
-            if symb_re.match(token):
+          if args.lang=='bg':
+            if url_re.match(token):
+              xpos='Np'
+              upos='PROPN'
+              lemma=token
+            elif mail_re.match(token):
+              xpos='Np'
+              upos='PROPN'
+              lemma=token
+            elif mention_re.match(token):
+              xpos='Np'
+              upos='PROPN'
+              lemma=token
+            elif hashtag_re.match(token):
+              xpos='Np'
+              upos='PROPN'
+              lemma=token
+            elif emoticon_re.match(token):
+              xpos='I'
+              upos='INTJ'
+              lemma=token
+            elif emoji_re.match(token):
+              xpos='I'
+              upos='INTJ'
+              lemma=token
+            elif punct_re.match(token):
+              if not symb_re.match(token):
+                upos='PUNCT'
+                xpos='punct'
+                lemma=token
+          else:
+            if url_re.match(token):
+              xpos='Xw'
               upos='SYM'
-            else:
-              upos='PUNCT'
+              lemma=token
+            elif mail_re.match(token):
+              xpos='Xw'
+              upos='SYM'
+              lemma=token
+            elif mention_re.match(token):
+              xpos='Xa'
+              upos='SYM'
+              lemma=token
+            elif hashtag_re.match(token):
+              xpos='Xh'
+              upos='SYM'
+              lemma=token
+            elif emoticon_re.match(token):
+              xpos='Xe'
+              upos='SYM'
+              lemma=token
+            elif emoji_re.match(token):
+              xpos='Xe'
+              upos='SYM'
+              lemma=token
+            elif punct_re.match(token):
+              xpos='Z'
+              lemma=token
+              if symb_re.match(token):
+                upos='SYM'
+              else:
+                upos='PUNCT'
         if args.conllu:
           SpaceAfter=True
           if len(sent)>token_idx+1:
