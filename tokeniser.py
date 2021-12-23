@@ -27,10 +27,7 @@ if __name__=='__main__':
   parser.add_argument('-t','--tag',help='adds tags and lemmas to punctuations and symbols',action='store_true')
   args=parser.parse_args()
 
-  if args.document:
-    args.conllu=True
-  if args.tag:
-    args.conllu=True
-  reldi = ReldiTokeniser(args.__dict__)
-  output = sys.stdout
-  reldi.run(sys.stdin, output)
+  args_dict = args.__dict__
+  args_dict['output'] = sys.stdout
+  reldi = ReldiTokeniser(**args_dict)
+  reldi.run(sys.stdin)

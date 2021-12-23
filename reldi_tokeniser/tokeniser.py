@@ -213,19 +213,7 @@ def to_text(sent):
   return text+'\n'
 
 def run(text, lang, conllu=False, bert=False, document=False, nonstandard=False, tag=False):
-  args = {
-    'lang': lang,
-    'conllu': conllu,
-    'bert': bert,
-    'document': document,
-    'nonstandard': nonstandard,
-    'tag': tag
-  }
-  if args['document']:
-    args['conllu'] = True
-  if args['tag']:
-    args['conllu'] = True
-  reldi = ReldiTokeniser(args)
+  reldi = ReldiTokeniser(lang, conllu, bert, document, nonstandard, tag)
   output = StringIO()
   split_text = [el + '\n' for el in text.split('\n')]
   reldi.run(split_text, output)
@@ -234,7 +222,20 @@ def run(text, lang, conllu=False, bert=False, document=False, nonstandard=False,
   return contents
 
 class ReldiTokeniser:
-  def __init__(self, args):
+  def __init__(self, lang, conllu=False, bert=False, document=False, nonstandard=False, tag=False, output=StringIO()):
+    self.output = output
+    args = {
+      'lang': lang,
+      'conllu': conllu,
+      'bert': bert,
+      'document': document,
+      'nonstandard': nonstandard,
+      'tag': tag
+    }
+    if args['document']:
+      args['conllu'] = True
+    if args['tag']:
+      args['conllu'] = True
     self.args = args
     lang = args['lang']
     self.mode = 'standard'
@@ -353,7 +354,7 @@ class ReldiTokeniser:
       output+='\n'
     return output
 
-  def run(self, input, output):
+  def run(self, input):
     par_id = 0
     for line in input:
       if line.strip() == '':
@@ -362,8 +363,8 @@ class ReldiTokeniser:
       if self.args['document']:
         if line.startswith('# newdoc id = '):
           par_id = 0
-          output.write(line)
+          self.output.write(line)
           continue
-      output.write(self.represent_tomaz(process[self.mode](self.tokenizer, line, lang), par_id))
+      self.output.write(self.represent_tomaz(process[self.mode](self.tokenizer, line, lang), par_id))
       if self.args['bert']:
-        output.write('\n')
+        self.output.write('\n')
