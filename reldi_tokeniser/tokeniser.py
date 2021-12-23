@@ -8,6 +8,8 @@ import unicodedata
 
 
 import os
+from io import StringIO
+
 reldir=os.path.dirname(os.path.abspath(__file__))
 
 def read_abbrevs(file):
@@ -210,15 +212,36 @@ def to_text(sent):
     text+=token
   return text+'\n'
 
+def run(text, lang, conllu=False, bert=False, document=False, nonstandard=False, tag=False):
+  args = {
+    'lang': lang,
+    'conllu': conllu,
+    'bert': bert,
+    'document': document,
+    'nonstandard': nonstandard,
+    'tag': tag
+  }
+  if args['document']:
+    args['conllu'] = True
+  if args['tag']:
+    args['conllu'] = True
+  reldi = ReldiTokeniser(args)
+  output = StringIO()
+  split_text = [el + '\n' for el in text.split('\n')]
+  reldi.run(split_text, output)
+  contents = output.getvalue()
+  output.close()
+  return contents
+
 class ReldiTokeniser:
   def __init__(self, args):
     self.args = args
-    lang = args.lang
+    lang = args['lang']
     self.mode = 'standard'
-    if args.nonstandard:
+    if args['nonstandard']:
       self.mode = 'nonstandard'
     self.tokenizer = generate_tokenizer(lang)
-    if args.tag:
+    if args['tag']:
       self.punct_re = re.compile(r'^[' + re.escape(punct) + ']+$', re.UNICODE)
       self.symb_re = re.compile(r'^[' + re.escape('#%&<>+=°x÷$@µ©™®§') + ']+$')
       self.hashtag_re = re.compile(r'^' + langs[lang]['hashtag'] + '$')
@@ -233,12 +256,12 @@ class ReldiTokeniser:
     output=''
     token_id=0
     sent_id=0
-    if self.args.conllu:
+    if self.args['conllu']:
       output+='# newpar id = ' + str(par_id)+'\n'
     for sent_idx,sent in enumerate(input):
       sent_id+=1
       token_id=0
-      if self.args.conllu:
+      if self.args['conllu']:
         output+='# sent_id = '+str(par_id)+'.'+str(sent_id)+'\n'
         output+='# text = '+to_text(sent)
       for token_idx,(token,start,end) in enumerate(sent):
@@ -247,9 +270,9 @@ class ReldiTokeniser:
           lemma='_'
           xpos='_'
           upos='_'
-          if self.args.tag:
+          if self.args['tag']:
             #'order':('abbrev','num','url','htmlesc','tag','mail','mention','hashtag','emoticon','word','arrow','dot','space','other')
-            if self.args.lang=='bg':
+            if self.args['lang']=='bg':
               if self.url_re.match(token):
                 xpos='Np'
                 upos='PROPN'
@@ -311,7 +334,7 @@ class ReldiTokeniser:
                   upos='SYM'
                 else:
                   upos='PUNCT'
-          if self.args.conllu:
+          if self.args['conllu']:
             SpaceAfter=True
             if len(sent)>token_idx+1:
               SpaceAfter=sent[token_idx+1][0].isspace()
@@ -321,26 +344,26 @@ class ReldiTokeniser:
               output+=str(token_id)+'\t'+token+'\t'+lemma+'\t'+upos+'\t'+xpos+'\t_'*5+'\n'
             else:
               output+=str(token_id)+'\t'+token+'\t'+lemma+'\t'+upos+'\t'+xpos+'\t_'*4+'\tSpaceAfter=No\n'
-          elif self.args.bert:
+          elif self.args['bert']:
             output+=token+' '
           else:
             output+=str(par_id)+'.'+str(sent_id)+'.'+str(token_id)+'.'+str(start+1)+'-'+str(end)+'\t'+token+'\n'
-      if self.args.bert:
+      if self.args['bert']:
         output=output.strip()
       output+='\n'
     return output
 
-  def run(self,args):
+  def run(self, input, output):
     par_id = 0
-    for line in sys.stdin:
+    for line in input:
       if line.strip() == '':
         continue
       par_id += 1
-      if args.document:
+      if self.args['document']:
         if line.startswith('# newdoc id = '):
           par_id = 0
-          sys.stdout.write(line)
+          output.write(line)
           continue
-      sys.stdout.write(self.represent_tomaz(process[self.mode](self.tokenizer, line, lang), par_id))
-      if args.bert:
-        sys.stdout.write('\n')
+      output.write(self.represent_tomaz(process[self.mode](self.tokenizer, line, lang), par_id))
+      if self.args['bert']:
+        output.write('\n')

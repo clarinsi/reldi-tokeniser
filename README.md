@@ -4,6 +4,7 @@ A tokeniser developed inside the [ReLDI project](https://reldi.spur.uzh.ch). Sup
 
 ## Usage
 
+### Command line
 ```
 $ echo 'kaj sad s tim.daj se nasmij ^_^.' | ./tokeniser.py hr -n
 1.1.1.1-3	kaj
@@ -22,6 +23,18 @@ $ echo 'kaj sad s tim.daj se nasmij ^_^.' | ./tokeniser.py hr -n
 ```
 
 Language is a positional argument while tokenisation of non-standard text is an optional one.
+
+### Python module
+```python
+import reldi_tokeniser
+
+text = 'kaj sad s tim.daj se nasmij ^_^.'
+
+output = reldi_tokeniser.run(text, 'hr', nonstandard=True, tag=True)
+```
+
+Python module has two mandatory parameters - text and language. Other optional parameters are `conllu`, `bert`, `document`, `nonstandard` and `tag`.
+
 
 ## CoNLL-U output
 
