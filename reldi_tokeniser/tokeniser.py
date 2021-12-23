@@ -6,14 +6,6 @@ import sys
 import threading
 import unicodedata
 
-if sys.platform == 'win32':
-  from signal import signal, SIG_DFL
-else:
-  from signal import signal, SIGPIPE, SIG_DFL
-
-if sys.platform != 'win32':
-    if threading.current_thread() is threading.main_thread():
-        signal(SIGPIPE, SIG_DFL)
 
 import os
 reldir=os.path.dirname(os.path.abspath(__file__))
@@ -218,145 +210,137 @@ def to_text(sent):
     text+=token
   return text+'\n'
 
-def represent_tomaz(input,par_id):
-  output=''
-  token_id=0
-  sent_id=0
-  if args.conllu:
-    output+='# newpar id = ' + str(par_id)+'\n'
-  for sent_idx,sent in enumerate(input):
-    sent_id+=1
-    token_id=0
-    if args.conllu:
-      output+='# sent_id = '+str(par_id)+'.'+str(sent_id)+'\n'
-      output+='# text = '+to_text(sent)
-    for token_idx,(token,start,end) in enumerate(sent):
-      if not token[0].isspace():
-        token_id+=1
-        lemma='_'
-        xpos='_'
-        upos='_'
-        if args.tag:
-          #'order':('abbrev','num','url','htmlesc','tag','mail','mention','hashtag','emoticon','word','arrow','dot','space','other')
-          if args.lang=='bg':
-            if url_re.match(token):
-              xpos='Np'
-              upos='PROPN'
-              lemma=token
-            elif mail_re.match(token):
-              xpos='Np'
-              upos='PROPN'
-              lemma=token
-            elif mention_re.match(token):
-              xpos='Np'
-              upos='PROPN'
-              lemma=token
-            elif hashtag_re.match(token):
-              xpos='Np'
-              upos='PROPN'
-              lemma=token
-            elif emoticon_re.match(token):
-              xpos='I'
-              upos='INTJ'
-              lemma=token
-            elif emoji_re.match(token):
-              xpos='I'
-              upos='INTJ'
-              lemma=token
-            elif punct_re.match(token):
-              if not symb_re.match(token):
-                upos='PUNCT'
-                xpos='punct'
-                lemma=token
-          else:
-            if url_re.match(token):
-              xpos='Xw'
-              upos='SYM'
-              lemma=token
-            elif mail_re.match(token):
-              xpos='Xw'
-              upos='SYM'
-              lemma=token
-            elif mention_re.match(token):
-              xpos='Xa'
-              upos='SYM'
-              lemma=token
-            elif hashtag_re.match(token):
-              xpos='Xh'
-              upos='SYM'
-              lemma=token
-            elif emoticon_re.match(token):
-              xpos='Xe'
-              upos='SYM'
-              lemma=token
-            elif emoji_re.match(token):
-              xpos='Xe'
-              upos='SYM'
-              lemma=token
-            elif punct_re.match(token):
-              xpos='Z'
-              lemma=token
-              if symb_re.match(token):
-                upos='SYM'
-              else:
-                upos='PUNCT'
-        if args.conllu:
-          SpaceAfter=True
-          if len(sent)>token_idx+1:
-            SpaceAfter=sent[token_idx+1][0].isspace()
-          elif len(input)>sent_idx+1:
-            SpaceAfter=input[sent_idx+1][0][0].isspace()
-          if SpaceAfter:
-            output+=str(token_id)+'\t'+token+'\t'+lemma+'\t'+upos+'\t'+xpos+'\t_'*5+'\n'
-          else:
-            output+=str(token_id)+'\t'+token+'\t'+lemma+'\t'+upos+'\t'+xpos+'\t_'*4+'\tSpaceAfter=No\n'
-        elif args.bert:
-          output+=token+' '
-        else:
-          output+=str(par_id)+'.'+str(sent_id)+'.'+str(token_id)+'.'+str(start+1)+'-'+str(end)+'\t'+token+'\n'
-    if args.bert:
-      output=output.strip()
-    output+='\n'
-  return output
+class ReldiTokeniser:
+  def __init__(self, args):
+    self.args = args
+    lang = args.lang
+    self.mode = 'standard'
+    if args.nonstandard:
+      self.mode = 'nonstandard'
+    self.tokenizer = generate_tokenizer(lang)
+    if args.tag:
+      self.punct_re = re.compile(r'^[' + re.escape(punct) + ']+$', re.UNICODE)
+      self.symb_re = re.compile(r'^[' + re.escape('#%&<>+=°x÷$@µ©™®§') + ']+$')
+      self.hashtag_re = re.compile(r'^' + langs[lang]['hashtag'] + '$')
+      self.mention_re = re.compile(r'^' + langs[lang]['mention'] + '$')
+      self.mail_re = re.compile(r'^' + langs[lang]['mail'] + '$')
+      self.url_re = re.compile(r'^' + langs[lang]['url'] + '$')
+      self.emoticon_re = re.compile(r'^' + langs[lang]['emoticon'] + '$')
+      self.emoji_re = re.compile('^[\U00010000-\U0010ffff]+$', flags=re.UNICODE)
 
-if __name__=='__main__':
-  import argparse
-  parser=argparse.ArgumentParser(description='Tokeniser for (non-)standard Slovene, Croatian, Serbian, Macedonian and Bulgarian')
-  parser.add_argument('lang',help='language of the text',choices=['sl','hr','sr','mk','bg'])
-  parser.add_argument('-c','--conllu',help='generates CONLLU output',action='store_true')
-  parser.add_argument('-b','--bert',help='generates BERT-compatible output',action='store_true')
-  parser.add_argument('-d','--document',help='passes through ConLL-U-style document boundaries',action='store_true')
-  parser.add_argument('-n','--nonstandard',help='invokes the non-standard mode',action='store_true')
-  parser.add_argument('-t','--tag',help='adds tags and lemmas to punctuations and symbols',action='store_true')
-  args=parser.parse_args()
-  if args.document:
-    args.conllu=True
-  if args.tag:
-    args.conllu=True
-  lang=args.lang
-  mode='standard'
-  if args.nonstandard:
-    mode='nonstandard'
-  tokenizer=generate_tokenizer(lang)
-  if args.tag:
-    punct_re=re.compile(r'^['+re.escape(punct)+']+$',re.UNICODE)
-    symb_re=re.compile(r'^['+re.escape('#%&<>+=°x÷$@µ©™®§')+']+$')
-    hashtag_re=re.compile(r'^'+langs[lang]['hashtag']+'$')
-    mention_re=re.compile(r'^'+langs[lang]['mention']+'$')
-    mail_re=re.compile(r'^'+langs[lang]['mail']+'$')
-    url_re=re.compile(r'^'+langs[lang]['url']+'$')
-    emoticon_re=re.compile(r'^'+langs[lang]['emoticon']+'$')
-    emoji_re=re.compile('^[\U00010000-\U0010ffff]+$',flags=re.UNICODE)
-  par_id=0
-  for line in sys.stdin:
-    if line.strip()=='':
-      continue
-    par_id+=1
-    if args.document:
-      if line.startswith('# newdoc id = '):
-        par_id=0
-        sys.stdout.write(line)
+
+  def represent_tomaz(self,input,par_id):
+    output=''
+    token_id=0
+    sent_id=0
+    if self.args.conllu:
+      output+='# newpar id = ' + str(par_id)+'\n'
+    for sent_idx,sent in enumerate(input):
+      sent_id+=1
+      token_id=0
+      if self.args.conllu:
+        output+='# sent_id = '+str(par_id)+'.'+str(sent_id)+'\n'
+        output+='# text = '+to_text(sent)
+      for token_idx,(token,start,end) in enumerate(sent):
+        if not token[0].isspace():
+          token_id+=1
+          lemma='_'
+          xpos='_'
+          upos='_'
+          if self.args.tag:
+            #'order':('abbrev','num','url','htmlesc','tag','mail','mention','hashtag','emoticon','word','arrow','dot','space','other')
+            if self.args.lang=='bg':
+              if self.url_re.match(token):
+                xpos='Np'
+                upos='PROPN'
+                lemma=token
+              elif self.mail_re.match(token):
+                xpos='Np'
+                upos='PROPN'
+                lemma=token
+              elif self.mention_re.match(token):
+                xpos='Np'
+                upos='PROPN'
+                lemma=token
+              elif self.hashtag_re.match(token):
+                xpos='Np'
+                upos='PROPN'
+                lemma=token
+              elif self.emoticon_re.match(token):
+                xpos='I'
+                upos='INTJ'
+                lemma=token
+              elif self.emoji_re.match(token):
+                xpos='I'
+                upos='INTJ'
+                lemma=token
+              elif self.punct_re.match(token):
+                if not self.symb_re.match(token):
+                  upos='PUNCT'
+                  xpos='punct'
+                  lemma=token
+            else:
+              if self.url_re.match(token):
+                xpos='Xw'
+                upos='SYM'
+                lemma=token
+              elif self.mail_re.match(token):
+                xpos='Xw'
+                upos='SYM'
+                lemma=token
+              elif self.mention_re.match(token):
+                xpos='Xa'
+                upos='SYM'
+                lemma=token
+              elif self.hashtag_re.match(token):
+                xpos='Xh'
+                upos='SYM'
+                lemma=token
+              elif self.emoticon_re.match(token):
+                xpos='Xe'
+                upos='SYM'
+                lemma=token
+              elif self.emoji_re.match(token):
+                xpos='Xe'
+                upos='SYM'
+                lemma=token
+              elif self.punct_re.match(token):
+                xpos='Z'
+                lemma=token
+                if self.symb_re.match(token):
+                  upos='SYM'
+                else:
+                  upos='PUNCT'
+          if self.args.conllu:
+            SpaceAfter=True
+            if len(sent)>token_idx+1:
+              SpaceAfter=sent[token_idx+1][0].isspace()
+            elif len(input)>sent_idx+1:
+              SpaceAfter=input[sent_idx+1][0][0].isspace()
+            if SpaceAfter:
+              output+=str(token_id)+'\t'+token+'\t'+lemma+'\t'+upos+'\t'+xpos+'\t_'*5+'\n'
+            else:
+              output+=str(token_id)+'\t'+token+'\t'+lemma+'\t'+upos+'\t'+xpos+'\t_'*4+'\tSpaceAfter=No\n'
+          elif self.args.bert:
+            output+=token+' '
+          else:
+            output+=str(par_id)+'.'+str(sent_id)+'.'+str(token_id)+'.'+str(start+1)+'-'+str(end)+'\t'+token+'\n'
+      if self.args.bert:
+        output=output.strip()
+      output+='\n'
+    return output
+
+  def run(self,args):
+    par_id = 0
+    for line in sys.stdin:
+      if line.strip() == '':
         continue
-    sys.stdout.write(represent_tomaz(process[mode](tokenizer,line,lang),par_id))
-    if args.bert:
-      sys.stdout.write('\n')
+      par_id += 1
+      if args.document:
+        if line.startswith('# newdoc id = '):
+          par_id = 0
+          sys.stdout.write(line)
+          continue
+      sys.stdout.write(self.represent_tomaz(process[self.mode](self.tokenizer, line, lang), par_id))
+      if args.bert:
+        sys.stdout.write('\n')
