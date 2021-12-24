@@ -26,11 +26,19 @@ Language is a positional argument while tokenisation of non-standard text is an 
 
 ### Python module
 ```python
+# string mode
 import reldi_tokeniser
 
 text = 'kaj sad s tim.daj se nasmij ^_^.'
 
 output = reldi_tokeniser.run(text, 'hr', nonstandard=True, tag=True)
+
+# object mode
+from reldi_tokeniser.tokeniser import ReldiTokeniser
+
+reldi = ReldiTokeniser('hr', conllu=True, nonstandard=True, tag=True)
+list_of_lines = [el + '\n' for el in text.split('\n')]
+test = reldi.run(list_of_lines, mode='object')
 ```
 
 Python module has two mandatory parameters - text and language. Other optional parameters are `conllu`, `bert`, `document`, `nonstandard` and `tag`.

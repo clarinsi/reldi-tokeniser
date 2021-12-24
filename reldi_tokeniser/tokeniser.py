@@ -213,10 +213,10 @@ def to_text(sent):
   return text+'\n'
 
 def run(text, lang, conllu=False, bert=False, document=False, nonstandard=False, tag=False):
-  reldi = ReldiTokeniser(lang, conllu, bert, document, nonstandard, tag)
   output = StringIO()
+  reldi = ReldiTokeniser(lang, conllu, bert, document, nonstandard, tag, output)
   split_text = [el + '\n' for el in text.split('\n')]
-  reldi.run(split_text, output)
+  reldi.run(split_text)
   contents = output.getvalue()
   output.close()
   return contents
@@ -253,18 +253,31 @@ class ReldiTokeniser:
       self.emoji_re = re.compile('^[\U00010000-\U0010ffff]+$', flags=re.UNICODE)
 
 
-  def represent_tomaz(self,input,par_id):
-    output=''
+  def represent_tomaz(self,input,par_id,mode):
+    if mode == 'string':
+      output=''
+    elif mode == 'object':
+      metadata = ''
+      data = []
     token_id=0
     sent_id=0
     if self.args['conllu']:
-      output+='# newpar id = ' + str(par_id)+'\n'
+      text = '# newpar id = ' + str(par_id)+'\n'
+      if mode == 'string':
+        output+=text
+      elif mode == 'object':
+        metadata+=text
     for sent_idx,sent in enumerate(input):
       sent_id+=1
       token_id=0
       if self.args['conllu']:
-        output+='# sent_id = '+str(par_id)+'.'+str(sent_id)+'\n'
-        output+='# text = '+to_text(sent)
+        text='# sent_id = '+str(par_id)+'.'+str(sent_id)+'\n'
+        text+='# text = '+to_text(sent)
+        if mode == 'string':
+          output += text
+        elif mode == 'object':
+          metadata += text
+          doc_sent = []
       for token_idx,(token,start,end) in enumerate(sent):
         if not token[0].isspace():
           token_id+=1
@@ -341,20 +354,36 @@ class ReldiTokeniser:
               SpaceAfter=sent[token_idx+1][0].isspace()
             elif len(input)>sent_idx+1:
               SpaceAfter=input[sent_idx+1][0][0].isspace()
-            if SpaceAfter:
-              output+=str(token_id)+'\t'+token+'\t'+lemma+'\t'+upos+'\t'+xpos+'\t_'*5+'\n'
-            else:
-              output+=str(token_id)+'\t'+token+'\t'+lemma+'\t'+upos+'\t'+xpos+'\t_'*4+'\tSpaceAfter=No\n'
+            if mode == 'string':
+              if SpaceAfter:
+                output+=str(token_id)+'\t'+token+'\t'+lemma+'\t'+upos+'\t'+xpos+'\t_'*5+'\n'
+              else:
+                output+=str(token_id)+'\t'+token+'\t'+lemma+'\t'+upos+'\t'+xpos+'\t_'*4+'\tSpaceAfter=No\n'
+            elif mode == 'object':
+              tok = {'id': tuple([token_id]), 'text': token, 'lemma': lemma, 'xpos': xpos, 'upos': upos, 'misc': '_'}
+              if not SpaceAfter:
+                tok['misc'] = 'SpaceAfter=No'
+              doc_sent.append(tok)
           elif self.args['bert']:
             output+=token+' '
           else:
             output+=str(par_id)+'.'+str(sent_id)+'.'+str(token_id)+'.'+str(start+1)+'-'+str(end)+'\t'+token+'\n'
-      if self.args['bert']:
-        output=output.strip()
-      output+='\n'
+      if mode == 'string':
+        if self.args['bert']:
+          output=output.strip()
+        output+='\n'
+      elif mode == 'object':
+          data.append({'sentence': doc_sent, 'metadata': metadata})
+          metadata = ''
+    if mode == 'object':
+      return data
     return output
 
-  def run(self, input):
+  def run(self, input, mode='string'):
+    if mode == 'object':
+      assert self.args['conllu'], Exception('For obtaining objects, tag `conllu` must be set to True!')
+      document = []
+      pre_metadata = ''
     par_id = 0
     for line in input:
       if line.strip() == '':
@@ -363,8 +392,22 @@ class ReldiTokeniser:
       if self.args['document']:
         if line.startswith('# newdoc id = '):
           par_id = 0
-          self.output.write(line)
+          if mode == 'object':
+            pre_metadata += line
+          else:
+            self.output.write(line)
           continue
-      self.output.write(self.represent_tomaz(process[self.mode](self.tokenizer, line, lang), par_id))
+      out = self.represent_tomaz(process[self.mode](self.tokenizer, line, lang), par_id, mode)
+      if mode == 'object':
+        if pre_metadata and len(out) > 0:
+          out[0]['metadata'] = pre_metadata + out[0]['metadata']
+        document.append(out)
+      else:
+        self.output.write(out)
       if self.args['bert']:
         self.output.write('\n')
+
+    if mode == 'object':
+      return document
+
+    return None
