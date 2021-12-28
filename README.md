@@ -22,7 +22,26 @@ $ echo 'kaj sad s tim.daj se nasmij ^_^.' | ./tokeniser.py hr -n
 
 ```
 
-Language is a positional argument while tokenisation of non-standard text is an optional one.
+Language is a positional argument while tokenisation of non-standard text, tagging and lemmatization of symbols and punctuation, and diferent output formats are an optional one.
+
+```
+$ python tokeniser.py -h
+usage: tokeniser.py [-h] [-c] [-b] [-d] [-n] [-t] {sl,hr,sr,mk,bg}
+
+Tokeniser for (non-)standard Slovene, Croatian, Serbian, Macedonian and
+Bulgarian
+
+positional arguments:
+  {sl,hr,sr,mk,bg}   language of the text
+
+optional arguments:
+  -h, --help         show this help message and exit
+  -c, --conllu       generates CONLLU output
+  -b, --bert         generates BERT-compatible output
+  -d, --document     passes through ConLL-U-style document boundaries
+  -n, --nonstandard  invokes the non-standard mode
+  -t, --tag          adds tags and lemmas to punctuations and symbols
+```
 
 ### Python module
 ```python
@@ -43,10 +62,9 @@ test = reldi.run(list_of_lines, mode='object')
 
 Python module has two mandatory parameters - text and language. Other optional parameters are `conllu`, `bert`, `document`, `nonstandard` and `tag`.
 
-
 ## CoNLL-U output
 
-This tokeniser is also an input point to the new neural pipeline for processing South Slavic languages [classla](https://github.com/clarinsi/classla), requiring a CoNLL-U format (flag `-c`/`--conllu`). If the additional ```-d```/```--document``` flag is given, the tokeniser passes through lines starting with ```# newdoc id =``` to preserve document structure.
+This tokeniser outputs also CoNLL-U format (flag `-c`/`--conllu`). If the additional ```-d```/```--document``` flag is given, the tokeniser passes through lines starting with ```# newdoc id =``` to preserve document structure.
 
 ```
 $ echo '# newdoc id = prvi
@@ -86,7 +104,7 @@ haha
 ```
 ## Pre-tagging
 
-The tokeniser can now also pre-annotate text on the part-of-speech and lemma level (flag `-t` or `--tag`), if the tokenisation logic has sufficient evidence for that (punctuations, mentions, hashtags, URL-s, emoticons, emojis).
+The tokeniser can also pre-annotate text on the part-of-speech (UPOS and XPOS) and lemma level (flag `-t` or `--tag`), if the available tokenisation regexes have sufficient evidence (punctuations, mentions, hashtags, URL-s, e-mails, emoticons, emojis). Default output format in case of pre-tagging is CoNLL-U.
 
 ```
 $ echo -e "kaj sad s tim.daj se nasmij ^_^. haha" | python tokeniser.py hr -n -t
@@ -112,5 +130,3 @@ $ echo -e "kaj sad s tim.daj se nasmij ^_^. haha" | python tokeniser.py hr -n -t
 1	haha	_	_	_	_	_	_	_	_
 
 ```
-
-The output above pre-annotates punctuation and one emoticon already on the XPOS, UPOS and lemma level. CoNLL-u output is the default one if pre-tagging is performed.
