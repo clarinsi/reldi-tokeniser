@@ -12,13 +12,11 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 setup(long_description=long_description,
       long_description_content_type="text/markdown",
       name='reldi-tokeniser',
-      version='0.0.1',
+      version='1.0.0',
       licence='apache-2.0',
       description='Sentence splitting and tokenization for South Slavic languages',
       author='CLARIN.SI',
       url='https://www.github.com/clarinsi/reldi-tokeniser',
       packages=['reldi_tokeniser'],
-      # scripts=['tokeniser.py'],
-      # install_requires=['lxml', 'regex'],
       package_data={'reldi_tokeniser': ['*.abbrev', 'punct']}
      )
