@@ -34,7 +34,7 @@ emoticon=r'[=:;8][\'-]*(?:\)+|\(+|\]+|\[+|D+\b|P+\b|S+\b|O+\b|d+\b|p+\b|s+\b|o+\
 url=r'https?://[-\w/%]+(?:[.#?=&@;][-\w/%]+)+|\b[\w-]+\.(?:[\w-]+\.)?(?:com|org|net|gov|edu|int|io|eu|si|hr|rs|ba|me|mk|it|at|hu|bg|ro|al|de|ch|be|dk|se|no|es|pt|ie|fr|fi|cl|co|bo|br|gr|ru|uk|us|by|cz|sk|pl|lt|lv|lu|ca|in|tr|il|iq|ir|hk|cn|jp|au|nz)/?\b'
 word=r'(?:[*]{2,})?\w+(?:[@­\'-]\w+|[*]+\w+)*(?:[*]{2,})?'
 #open('punct','w').write(''.join([chr(i) for i in range(sys.maxunicode) if unicodedata.category(chr(i)).startswith('P')]))
-punct = open(os.path.join(reldir,'punct')).read()
+punct = open(os.path.join(reldir,'punct'), encoding="utf-8").read()
 
 langs={
   'hr':{
