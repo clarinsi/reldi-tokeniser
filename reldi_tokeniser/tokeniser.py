@@ -360,7 +360,8 @@ class ReldiTokeniser:
               else:
                 output+=str(token_id)+'\t'+token+'\t'+lemma+'\t'+upos+'\t'+xpos+'\t_'*4+'\tSpaceAfter=No\n'
             elif mode == 'object':
-              tok = {'id': tuple([token_id]), 'text': token, 'lemma': lemma, 'xpos': xpos, 'upos': upos, 'misc': '_'}
+              tok = {'id': tuple([token_id]), 'text': token, 'lemma': lemma, 'xpos': xpos, 'upos': upos, 'misc': '_',
+                     'start_char': start, 'end_char': end}
               if not SpaceAfter:
                 tok['misc'] = 'SpaceAfter=No'
               doc_sent.append(tok)
