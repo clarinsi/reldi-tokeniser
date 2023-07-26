@@ -109,7 +109,6 @@ langs={
     'order':('abbrev','num','url','htmlesc','tag','mail','mention','hashtag','emoticon','word','arrow','dot','space','other')
   },
 
-
   'bg':{
     'abbrev':r'|'.join(abbrevs['bg']['B']+abbrevs['bg']['N']+abbrevs['bg']['S']),
     'num':num,
@@ -237,7 +236,7 @@ class ReldiTokeniser:
     if args['tag']:
       args['conllu'] = True
     self.args = args
-    lang = args['lang']
+    self.lang = args['lang']
     self.mode = 'standard'
     if args['nonstandard']:
       self.mode = 'nonstandard'
@@ -398,7 +397,7 @@ class ReldiTokeniser:
           else:
             self.output.write(line)
           continue
-      out = self.represent_tomaz(process[self.mode](self.tokenizer, line, lang), par_id, mode)
+      out = self.represent_tomaz(process[self.mode](self.tokenizer, line, self.lang), par_id, mode)
       if mode == 'object':
         if pre_metadata and len(out) > 0:
           out[0]['metadata'] = pre_metadata + out[0]['metadata']
